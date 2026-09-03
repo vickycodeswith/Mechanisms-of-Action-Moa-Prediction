@@ -11,3 +11,5 @@ click
 joblib
 tensorboard
 psutil
+huggingface_hub
+streamlit
