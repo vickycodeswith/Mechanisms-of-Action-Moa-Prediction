@@ -1,23 +1,40 @@
-# Mechanisms of Action (MoA) Prediction
+# 🧬 Mechanisms of Action (MoA) Prediction
 
-A complete end-to-end machine learning project for predicting the **Mechanisms of Action (MoA)** of drugs from gene-expression and cell-viability data.
+> **End-to-end Machine Learning system for predicting the Mechanisms of Action (MoA) of drug treatments using gene-expression and cell-viability data.**
 
-The project focuses on building, comparing, evaluating, and generating predictions from neural-network models using **5-fold cross-validation**.
+[![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Deep%20Learning-ee4c2c?logo=pytorch)](https://pytorch.org/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML-F7931E?logo=scikit-learn)](https://scikit-learn.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-Data%20Processing-150458?logo=pandas)](https://pandas.pydata.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Live%20Demo-FF4B4B?logo=streamlit)](https://streamlit.io/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
 
-## Project Overview
+## 🚀 Live Demo
 
-The goal of this project is to predict which biological mechanisms of action are activated by a given drug treatment.
+### 👉 [**Launch the MoA Prediction Web App**](https://mechanisms-of-action-moa-prediction-app.streamlit.app/)
 
-The dataset contains:
+Try the deployed machine learning application directly in your browser.
 
-- Gene-expression features
-- Cell-viability features
-- Treatment metadata
-- Multiple binary MoA targets
+The application provides an interactive interface for generating **Mechanisms of Action predictions** using the trained model.
 
-The final pipeline includes:
+---
+
+## 📌 Project Overview
+
+**Mechanisms of Action (MoA) Prediction** is a multi-label machine learning problem in computational biology and drug discovery.
+
+The objective of this project is to predict which biological mechanisms of action are activated by a given drug treatment.
+
+The model learns from:
+
+* 🧬 Gene-expression features
+* 🧪 Cell-viability features
+* 💊 Treatment metadata
+* 🎯 Multiple binary MoA targets
+
+The project implements a complete ML workflow:
 
 ```text
 Raw Kaggle Dataset
@@ -36,322 +53,310 @@ Model Evaluation
         ↓
 5-Fold Ensemble Prediction
         ↓
-Submission File
-Dataset
+MoA Predictions
+```
 
-This project uses the Mechanisms of Action (MoA) Prediction dataset from Kaggle.
+---
 
-The competition task is a multi-label binary classification problem where the model predicts multiple possible MoA targets for each drug treatment.
+## 🎯 Problem Statement
 
-Dataset Structure
+This project treats MoA prediction as a **multi-label binary classification problem**.
 
-The main files include:
+For each drug treatment, the model predicts the probability of **206 different MoA targets**.
 
+### Input
+
+The final pipeline uses:
+
+```text
+882 Features
+```
+
+including processed biological and treatment-related information.
+
+### Output
+
+```text
+206 MoA Prediction Probabilities
+```
+
+Each output represents the predicted probability of a specific mechanism of action.
+
+---
+
+## 📊 Dataset
+
+This project uses the **Mechanisms of Action (MoA) Prediction dataset from Kaggle**.
+
+The raw dataset is intentionally excluded from the repository because of its size.
+
+### Main Dataset Files
+
+```text
 train_features.csv
 train_targets_scored.csv
 train_targets_nonscored.csv
 train_drug.csv
 test_features.csv
 sample_submission.csv
+```
 
-The training feature dataset contains:
+### Feature Groups
 
-Treatment metadata
-Gene-expression features (g-*)
-Cell-viability features (c-*)
+| Feature Group      | Description                   |
+| ------------------ | ----------------------------- |
+| `g-*`              | Gene-expression features      |
+| `c-*`              | Cell-viability features       |
+| Treatment Metadata | Treatment-related information |
+| MoA Targets        | 206 binary target variables   |
 
-The scored target dataset contains 206 MoA target variables.
+---
 
-The raw dataset is intentionally excluded from Git because of its size.
+# 🧠 Machine Learning Approach
 
-Machine Learning Problem
-
-This is a multi-label binary classification problem.
-
-For every treatment sample, the model predicts probabilities for 206 different MoA targets.
-
-The output therefore has the form:
-
-Input sample
-    ↓
-882 features
-    ↓
-Neural Network
-    ↓
-206 output probabilities
-Evaluation Metric
-
-The primary evaluation metric is mean column-wise binary log loss.
-
-For each target column, binary log loss is calculated and then averaged across all 206 targets.
-
-Lower values are better.
-
-The final model achieved:
-
-Mean 5-Fold CV Log Loss: 0.01714092
-
-Important: 0.01714092 is the project's local 5-fold cross-validation result. It is not an official Kaggle leaderboard score.
-
-Approach
-1. Data Preprocessing
+## 1. Data Preprocessing
 
 The preprocessing pipeline:
 
-Loads the raw Kaggle datasets
-Removes control-vehicle samples from the training data
-Encodes categorical treatment variables
-Processes gene-expression features
-Processes cell-viability features
-Creates train/validation folds
-Saves the processed datasets locally
+* Loads the raw Kaggle datasets
+* Removes control-vehicle samples from training data
+* Encodes categorical treatment variables
+* Processes gene-expression features
+* Processes cell-viability features
+* Creates cross-validation folds
+* Saves processed datasets
 
 Run:
 
+```bash
 python src/dataset.py data/raw/ data/processed_fe/
-2. Feature Engineering
+```
 
-Additional statistical features are created from the original gene and cell features.
+---
 
-Gene Features
+## 2. Feature Engineering
 
-The following statistics are calculated:
+Additional statistical features are generated from the biological feature groups.
 
+### Gene-Expression Statistics
+
+```text
 g_mean
 g_std
 g_min
 g_max
-Cell Features
+```
 
-The following statistics are calculated:
+### Cell-Viability Statistics
 
+```text
 c_mean
 c_std
 c_min
 c_max
+```
 
-These additional features provide the model with compact statistical information about the biological feature groups.
+These features provide the neural network with compact statistical information about the underlying biological feature distributions.
 
-After preprocessing and feature engineering:
+### Final Feature Space
 
+```text
 Input Features: 882
-Targets: 206
-Model Architecture
+Target Variables: 206
+```
 
-The final model is a feedforward neural network with Batch Normalization.
+---
 
-Architecture
-Input
-  │
-  ▼
-882 Features
-  │
-  ▼
-Linear Layer
-1024 Units
-  │
-  ▼
-Batch Normalization
-  │
-  ▼
-ReLU
-  │
-  ▼
-Linear Layer
-2048 Units
-  │
-  ▼
-Batch Normalization
-  │
-  ▼
-ReLU
-  │
-  ▼
-Linear Layer
-206 Units
-  │
-  ▼
-MoA Predictions
-Final Configuration
-{
-    "model_name": "MoaModel",
-    "layer1_size": 1024,
-    "layer2_size": 2048,
-    "dropout_rate": 0.0,
-    "batch_norm": true,
-    "lr": 0.001,
-    "batch_size": 64,
-    "num_epochs": 5,
-    "input_path": "data/processed_fe",
-    "output_path": "models_fe_batchnorm",
-    "folds": [0, 1, 2, 3, 4]
-}
-Model Training
+# 🏗️ Neural Network Architecture
 
-The project uses 5-fold cross-validation.
+The final model is a **Feedforward Neural Network with Batch Normalization**.
 
-Each fold trains a separate model:
+```text
+                  Input
+                    │
+                    ▼
+              882 Features
+                    │
+                    ▼
+              Linear Layer
+                1024 Units
+                    │
+                    ▼
+           Batch Normalization
+                    │
+                    ▼
+                  ReLU
+                    │
+                    ▼
+              Linear Layer
+               2048 Units
+                    │
+                    ▼
+           Batch Normalization
+                    │
+                    ▼
+                  ReLU
+                    │
+                    ▼
+              Linear Layer
+                206 Units
+                    │
+                    ▼
+            MoA Predictions
+```
 
-Fold 0 → Model
-Fold 1 → Model
-Fold 2 → Model
-Fold 3 → Model
-Fold 4 → Model
+---
 
-The validation performance is measured independently for every fold.
+## ⚙️ Final Model Configuration
 
-Training Configuration
-Parameter	Value
-Input Features	882
-Hidden Layer 1	1024
-Hidden Layer 2	2048
-Output Targets	206
-Batch Size	64
-Learning Rate	0.001
-Maximum Epochs	5
-Batch Normalization	Yes
-Optimizer	Adam
-Cross-Validation	5-Fold
+| Parameter           |  Value |
+| ------------------- | -----: |
+| Input Features      |    882 |
+| Hidden Layer 1      |   1024 |
+| Hidden Layer 2      |   2048 |
+| Output Targets      |    206 |
+| Batch Size          |     64 |
+| Learning Rate       |  0.001 |
+| Maximum Epochs      |      5 |
+| Batch Normalization |    Yes |
+| Optimizer           |   Adam |
+| Cross-Validation    | 5-Fold |
+| Dropout             |    0.0 |
 
-The training pipeline also uses ReduceLROnPlateau learning-rate scheduling:
+The training pipeline also uses a `ReduceLROnPlateau` learning-rate scheduler.
 
-patience = 1
-factor = 0.5
-Experiments
+---
 
-Several experiments were performed to improve the baseline model.
+# 🔬 Model Experiments
 
-Original MLP Baseline
+Multiple experiments were performed to identify an effective architecture.
 
-Architecture:
+| Experiment                            | Mean 5-Fold CV Log Loss |
+| ------------------------------------- | ----------------------: |
+| Original MLP Baseline                 |            `0.01794079` |
+| MLP + Feature Engineering + BatchNorm |        **`0.01714092`** |
+| MLP + Dropout                         |            `0.01769693` |
+| MLP + Scheduler                       |            `0.01766826` |
 
-874 Features
-    ↓
-1024
-    ↓
-2048
-    ↓
-206 Targets
+### 🏆 Best Configuration
 
-Result:
+The final **Feature Engineering + Batch Normalization MLP** achieved:
 
-Mean CV Log Loss: 0.01794079
-Feature Engineering
+```text
+Mean 5-Fold CV Log Loss
+0.01714092
+```
 
-Statistical features were added:
+This represents approximately:
 
-g_mean
-g_std
-g_min
-g_max
-
-c_mean
-c_std
-c_min
-c_max
-
-The resulting model used:
-
-882 Features
-
-The feature-engineered model improved the validation performance.
-
-5-Epoch Training
-
-Training for additional epochs was tested to determine whether the model could continue improving.
-
-The validation loss generally improved during the first few epochs and then started showing signs of overfitting.
-
-This experiment helped identify an effective training range for the final configuration.
-
-Dropout Experiment
-
-Dropout with:
-
-dropout_rate = 0.2
-
-was tested.
-
-Result:
-
-Mean CV Log Loss: 0.01769693
-
-This was worse than the final BatchNorm configuration.
-
-Learning-Rate Scheduler Experiment
-
-A learning-rate scheduling experiment was also evaluated.
-
-Result:
-
-Mean CV Log Loss: 0.01766826
-
-This was also worse than the final BatchNorm configuration.
-
-Wider MLP Experiment
-
-A wider first hidden layer was tested:
-
-2048 → 2048
-
-This did not outperform the final architecture.
-
-Batch Normalization Experiment
-
-Batch Normalization was added after the linear layers and before the ReLU activation.
-
-Result:
-
-Mean CV Log Loss: 0.01714092
-
-This became the best verified configuration.
-
-Final Model Comparison
-Model	Mean 5-Fold CV Log Loss
-Original MLP Baseline	0.01794079
-MLP + Feature Engineering + BatchNorm	0.01714092
-Improvement
-
-The final model achieved approximately:
-
+```text
 4.46% relative reduction in log loss
+```
 
 compared with the original MLP baseline.
 
-Why Batch Normalization Was Selected
+> **Note:** `0.01714092` is the project's local 5-fold cross-validation result and is **not an official Kaggle leaderboard score**.
 
-Among the tested configurations, the BatchNorm model produced the best verified 5-fold cross-validation result.
+---
 
-The improvement was:
+# 🔁 5-Fold Cross-Validation
 
-Baseline
+Five independent models are trained:
+
+```text
+Fold 0 ──→ Model 0
+Fold 1 ──→ Model 1
+Fold 2 ──→ Model 2
+Fold 3 ──→ Model 3
+Fold 4 ──→ Model 4
+```
+
+During prediction, the outputs from all five models are combined:
+
+```text
+Model 0 ─┐
+Model 1 ─┤
+Model 2 ─┤
+Model 3 ─┼──→ Final MoA Predictions
+Model 4 ─┘
+```
+
+This approach helps improve prediction robustness compared with relying on a single model.
+
+---
+
+# 📈 Evaluation Metric
+
+The primary evaluation metric is:
+
+## Mean Column-Wise Binary Log Loss
+
+Binary log loss is calculated independently for every MoA target and then averaged across all **206 targets**.
+
+```text
+Lower Log Loss = Better Performance
+```
+
+### Final Result
+
+```text
+Baseline:
 0.01794079
-      ↓
-BatchNorm
+
+Final Model:
 0.01714092
 
-Therefore, the BatchNorm configuration was selected as the final model.
+Relative Improvement:
+≈ 4.46%
+```
 
-Prediction Pipeline
+---
+
+# 🔮 Prediction Pipeline
 
 The prediction pipeline uses all five trained fold models.
 
-Fold 0 Model ─┐
-Fold 1 Model ─┤
-Fold 2 Model ─┤
-Fold 3 Model ─┼──→ Predictions
-Fold 4 Model ─┘
+For control-vehicle samples:
 
-The pipeline also handles control-vehicle samples.
-
-For control-vehicle rows:
-
+```text
 Prediction = 0
+```
 
-The final predictions are aligned with the original sig_id order.
+The final predictions are aligned with the original `sig_id` order.
 
-Project Structure
-mechanisms-of-action-moa-prediction/
+---
+
+# ✅ Submission Validation
+
+The generated submission is automatically validated for:
+
+* Submission shape
+* Column names
+* `sig_id` ordering
+* Duplicate IDs
+* Missing values
+* Control-vehicle predictions
+
+### Validation Result
+
+```text
+Submission shape: (3982, 207)
+Columns match: True
+sig_id order matches: True
+sig_id unique: True
+NaN values: 0
+Control rows: 358
+Max control prediction: 0.0
+
+SUBMISSION VALIDATION: PASS
+```
+
+---
+
+# 📁 Project Structure
+
+```text
+Mechanisms-of-Action-Moa-Prediction/
 │
 ├── configs/
 │   ├── MoaModel_config.json
@@ -396,167 +401,282 @@ mechanisms-of-action-moa-prediction/
 ├── README.md
 ├── requirements.txt
 ├── setup.py
+├── target_names.txt
 ├── test_environment.py
 └── tox.ini
+```
 
-Generated datasets and model files are excluded from Git using .gitignore.
+---
 
-Technologies Used
-Python
-NumPy
-Pandas
-Scikit-learn
-PyTorch
-PyTorch MPS
-Joblib
-TensorBoard
-Kaggle API
-Git
-GitHub
-Installation
-Clone the Repository
+# 🛠️ Technologies & Tools
+
+### Programming
+
+* Python
+
+### Data Science
+
+* NumPy
+* Pandas
+* Scikit-learn
+
+### Deep Learning
+
+* PyTorch
+* Batch Normalization
+* Adam Optimizer
+* ReduceLROnPlateau
+
+### Experimentation & Evaluation
+
+* 5-Fold Cross-Validation
+* Binary Log Loss
+* TensorBoard
+
+### Infrastructure & Development
+
+* Kaggle API
+* Git
+* GitHub
+* PyTorch MPS
+
+### Deployment
+
+* Streamlit
+
+---
+
+# 💻 Installation
+
+## 1. Clone the Repository
+
+```bash
 git clone https://github.com/vickycodeswith/Mechanisms-of-Action-Moa-Prediction.git
+
 cd Mechanisms-of-Action-Moa-Prediction
-Install Dependencies
+```
+
+## 2. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-Kaggle API Setup
+```
 
-Configure the Kaggle API credentials:
+---
 
+# 🔑 Kaggle API Setup
+
+Configure your Kaggle API credentials:
+
+```text
 ~/.kaggle/kaggle.json
+```
 
-Set the correct permissions:
+Set the appropriate permissions:
 
+```bash
 chmod 600 ~/.kaggle/kaggle.json
+```
 
-After accepting the Kaggle competition rules, download the competition dataset.
+After accepting the relevant Kaggle competition rules, download the dataset and place the raw files inside:
 
-Place the raw files inside:
-
+```text
 data/raw/
-Reproduce the Project
-Step 1 — Download Dataset
+```
+
+---
+
+# ▶️ Reproduce the Project
+
+## Step 1 — Prepare Dataset
 
 Place the Kaggle dataset inside:
 
+```text
 data/raw/
-Step 2 — Preprocess Data
+```
+
+---
+
+## Step 2 — Preprocess Data
+
+```bash
 python src/dataset.py data/raw/ data/processed_fe/
-Step 3 — Train Final Model
+```
+
+---
+
+## Step 3 — Train Final Model
+
+```bash
 python src/train.py \
     --model_name MoaModel \
     --config configs/MoaModel_FE_BATCHNORM_config.json
+```
 
 Trained models will be generated in:
 
+```text
 models_fe_batchnorm/
-Step 4 — Evaluate
+```
+
+---
+
+## Step 4 — Evaluate Model
+
+```bash
 python src/evaluate.py \
     MoaModel \
     models_fe_batchnorm \
     data/processed_fe
+```
 
 Expected result:
 
+```text
 Mean CV Log Loss: 0.01714092
-Step 5 — Generate Predictions
+```
+
+---
+
+## Step 5 — Generate Predictions
+
+```bash
 python src/predict.py \
     models_fe_batchnorm \
     data/processed_fe \
     data/predictions_batchnorm
+```
 
-The final submission file will be:
+The final prediction file will be:
 
+```text
 data/predictions_batchnorm/submission.csv
-Reproducibility
+```
 
-Major experiments are controlled through separate JSON configuration files.
+---
 
-This allows different model configurations to be tested without manually changing architecture parameters inside the source code.
+# 🖥️ Live Web Application
 
-The final configuration is:
+The trained model has been deployed as an interactive Streamlit application.
 
+### 🚀 Try the Application
+
+**[Open MoA Prediction App →](https://mechanisms-of-action-moa-prediction-app.streamlit.app/)**
+
+The web application provides a user-friendly interface for interacting with the trained MoA prediction system without requiring users to run the complete ML pipeline locally.
+
+---
+
+# 🧪 Reproducibility
+
+Model experiments are controlled through separate JSON configuration files.
+
+This makes it possible to modify:
+
+* Architecture
+* Learning rate
+* Batch size
+* Number of epochs
+* Batch normalization
+* Dropout
+* Other training parameters
+
+without manually changing the core training code.
+
+### Final Configuration
+
+```text
 configs/MoaModel_FE_BATCHNORM_config.json
+```
 
-This configuration reproduces the final BatchNorm experiment.
+This configuration reproduces the final Batch Normalization experiment.
 
-Hardware
+---
 
-The project was developed and tested on Apple Silicon using PyTorch's MPS (Metal Performance Shaders) backend when available.
+# 🖥️ Hardware
 
-The training code automatically selects:
+The project was developed and tested on **Apple Silicon** using PyTorch's MPS backend when available.
 
+The training code automatically selects the available device in the following order:
+
+```text
 CUDA
   ↓
 MPS
   ↓
 CPU
+```
 
-depending on available hardware.
+---
 
-Submission Validation
+# 🔮 Future Improvements
 
-The generated submission is validated before completion.
+Potential directions for improving the system include:
 
-The validation checks include:
+* [ ] FT-Transformer
+* [ ] TabNet optimization
+* [ ] Hyperparameter optimization
+* [ ] Advanced feature selection
+* [ ] Model ensembling
+* [ ] Explainable AI
+* [ ] Target-specific modeling
+* [ ] External biological knowledge features
+* [ ] Automated experiment tracking
+* [ ] Advanced deep learning architectures
 
-Submission shape
-Column names
-sig_id order
-Duplicate IDs
-Missing values
-Control-vehicle predictions
+---
 
-Final validation result:
+# 📚 Key Takeaways
 
-Submission shape: (3982, 207)
-Columns match: True
-sig_id order matches: True
-sig_id unique: True
-NaN values: 0
-Control rows: 358
-Max control prediction: 0.0
+This project demonstrates an end-to-end applied machine learning workflow covering:
 
-SUBMISSION VALIDATION: PASS
-Key Results
-Original MLP
-     │
-     │ 0.01794079
-     ▼
+```text
+Data Engineering
+      ↓
 Feature Engineering
-     │
-     ▼
-Batch Normalization
-     │
-     │ 0.01714092
-     ▼
-Final Model
-Final Score
-Mean 5-Fold CV Log Loss
+      ↓
+Multi-Label Classification
+      ↓
+Deep Learning
+      ↓
+Cross-Validation
+      ↓
+Experimentation
+      ↓
+Model Evaluation
+      ↓
+Ensemble Prediction
+      ↓
+Model Deployment
+```
 
-0.01714092
-Relative Improvement
-≈ 4.46% lower log loss
+The project combines **computational biology, machine learning, deep learning, feature engineering, model experimentation, and deployment** into a complete practical workflow.
 
-compared with the original MLP baseline.
+---
 
-Future Improvements
+# 📜 License
 
-Potential future improvements include:
+This project is released under the **MIT License**.
 
-FT-Transformer
-TabNet
-Hyperparameter optimization
-Advanced feature selection
-Model ensembling
-Explainable AI
-Target-specific modeling
-External biological knowledge features
-Automated experiment tracking
-License
+See the [LICENSE](LICENSE) file for details.
 
-This project is released under the license included in the repository.
+---
 
-Author
+# 👨‍💻 Author
 
-vickycodeswith
+**vickycodeswith**
+
+GitHub:
+https://github.com/vickycodeswith
+
+---
+
+## ⭐ If You Find This Project Useful
+
+Consider giving the repository a ⭐ **Star** on GitHub and exploring the live application.
+
+### 🔗 Project Links
+
+* 📂 **[GitHub Repository](https://github.com/vickycodeswith/Mechanisms-of-Action-Moa-Prediction)**
+* 🚀 **[Live Streamlit App](https://mechanisms-of-action-moa-prediction-app.streamlit.app/)**
