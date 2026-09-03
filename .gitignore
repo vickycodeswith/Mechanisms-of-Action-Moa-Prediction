@@ -1,0 +1,142 @@
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+__pycache__/
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# training logs and tensorboard event files
+logs/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# DotEnv configuration
+.env
+
+# Virtual environment configuration
+.venv
+
+# Database
+*.db
+*.rdb
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Spyder
+.spyproject/
+
+# Jupyter NB Checkpoints
+.ipynb_checkpoints/
+
+# Exclude data and models from source control by default
+data/raw/*.csv
+data/predictions/*.csv
+data/processed/*.csv
+models/
+
+# Exclude drafts and notes
+drafts/
+notes/
+
+# Mac OS-specific storage files
+.DS_Store
+
+# vim
+*.swp
+*.swo
+
+# Mypy cache
+.mypy_cache/
+# MoA experiment outputs
+data/processed_fe/
+data/predictions_fe/
+data/predictions_batchnorm/
+
+models_fe/
+models_fe_5ep/
+models_fe_batchnorm/
+models_fe_dropout/
+models_fe_scheduler/
+models_fe_wide/
+
+# Generated experiment artifacts
+src/*_before_batchnorm.py
+
+# MoA raw and generated data
+data/raw/
+data/processed_fe/
+data/predictions_fe/
+data/predictions_batchnorm/
+
+# MoA experiment model outputs
+models_fe/
+models_fe_5ep/
+models_fe_batchnorm/
+models_fe_dropout/
+models_fe_scheduler/
+models_fe_wide/
+
+# Generated MoA data
+data/raw/
+data/processed/
+data/processed_fe/
+data/predictions/
+data/predictions_fe/
+data/predictions_batchnorm/

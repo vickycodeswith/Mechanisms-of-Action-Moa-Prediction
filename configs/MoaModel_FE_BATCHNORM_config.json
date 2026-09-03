@@ -1,0 +1,13 @@
+{
+    "model_name": "MoaModel",
+    "layer1_size": 1024,
+    "layer2_size": 2048,
+    "dropout_rate": 0.0,
+    "batch_norm": true,
+    "lr": 0.001,
+    "batch_size": 64,
+    "num_epochs": 5,
+    "input_path": "data/processed_fe",
+    "output_path": "models_fe_batchnorm",
+    "folds": [0, 1, 2, 3, 4]
+}

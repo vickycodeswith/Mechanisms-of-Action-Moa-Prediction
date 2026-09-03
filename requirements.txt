@@ -1,0 +1,13 @@
+# Core data science
+numpy
+pandas
+scikit-learn
+
+# Deep learning
+torch
+
+# Training and utilities
+click
+joblib
+tensorboard
+psutil
